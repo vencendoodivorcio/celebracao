@@ -1598,26 +1598,182 @@ button, input, select, textarea {
   }
 }
 
+@media (max-width: 760px) {
+  /* Transforma a tabela do painel em cards nativos tocáveis no celular */
+  .table-card {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  .table-responsive {
+    overflow-x: visible;
+  }
+
+  .data-table {
+    min-width: 0;
+  }
+
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table,
+  .data-table tbody,
+  .data-table tr,
+  .data-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .data-table tbody {
+    display: grid;
+    gap: 14px;
+  }
+
+  .data-table tbody tr {
+    background: var(--bg-surface);
+    border: 1px solid rgba(184, 134, 11, 0.28);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .data-table tbody tr:hover {
+    background: var(--bg-surface);
+  }
+
+  .data-table td {
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(32, 56, 100, 0.1);
+  }
+
+  .data-table td:first-child {
+    padding-top: 0;
+  }
+
+  .data-table td:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    padding-top: 10px;
+  }
+
+  .data-table .status-select {
+    width: 100%;
+    min-height: 40px;
+    font-size: 0.85rem;
+  }
+
+  .data-table .row-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .data-table .row-actions .btn {
+    width: 100%;
+    min-height: 40px;
+  }
+}
+
 @media (max-width: 640px) {
+  .container,
+  .container-narrow {
+    padding: 0 14px;
+  }
+
   .hero {
-    padding: 38px 0 46px;
+    padding: 32px 0 42px;
+  }
+
+  .hero-rings {
+    width: 380px;
+    height: 380px;
+    top: -100px;
+    right: -130px;
+  }
+
+  .hero-top-row {
+    gap: 12px;
+  }
+
+  .date-badge {
+    width: 68px;
+  }
+
+  .date-badge-day {
+    font-size: 1.6rem;
+  }
+
+  .hero h1 {
+    font-size: 2.85rem;
+  }
+
+  .hero-cta-group {
+    flex-direction: column;
+  }
+
+  .hero-cta-group .btn {
+    width: 100%;
+  }
+
+  .hero-card {
+    padding: 20px 16px;
   }
 
   .topbar-inner {
-    min-height: 62px;
+    min-height: 60px;
+    gap: 10px;
+  }
+
+  .topbar .env-badge {
+    display: none;
+  }
+
+  .brand {
+    gap: 9px;
+    min-width: 0;
+  }
+
+  .brand-mark {
+    width: 36px;
+    height: 36px;
   }
 
   .brand-title {
-    font-size: 0.9rem;
+    font-size: 0.82rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.65rem;
+  }
+
+  .btn-header-access {
+    padding: 7px 11px;
+    font-size: 0.75rem;
   }
 
   .volunteer-bar,
   .form-body {
-    padding-left: 18px;
-    padding-right: 18px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .volunteer-input-row {
+    flex-wrap: wrap;
+  }
+
+  .conditional-block {
+    padding: 15px 14px;
+  }
+
+  /* Evita auto-zoom no iOS Safari ao tocar nos campos */
+  .input, .select, .textarea {
+    font-size: 16px;
   }
 
   .grid-2,
+  .option-grid,
   .option-grid-2,
   .option-grid-3,
   .steps-cards,
@@ -1628,6 +1784,27 @@ button, input, select, textarea {
 
   .kpi-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .kpi-card {
+    padding: 14px;
+  }
+
+  .kpi-card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .kpi-value {
+    font-size: 1.7rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.45rem;
+  }
+
+  .dashboard-header-actions {
+    width: 100%;
   }
 
   .form-footer {
@@ -1637,5 +1814,19 @@ button, input, select, textarea {
 
   .form-footer .btn {
     width: 100%;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .toast {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    text-align: center;
   }
 }
