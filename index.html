@@ -52,13 +52,36 @@
     </div>
   </header>
 
-  <!-- Hero Oficial (Fundo Creme/Dourado + Círculos Concêntricos + Script MonteCarlo) -->
+  <!-- Hero Oficial (Fundo Creme/Dourado + Círculos Concêntricos Animados + Partículas Douradas) -->
   <section class="hero">
     <svg class="hero-rings" viewBox="0 0 600 600" fill="none" aria-hidden="true">
-      <circle cx="300" cy="300" r="140" stroke="#B8860B" stroke-opacity="0.32" stroke-width="1.2" />
-      <circle cx="300" cy="300" r="205" stroke="#B8860B" stroke-opacity="0.25" stroke-width="1.2" />
-      <circle cx="300" cy="300" r="270" stroke="#B8860B" stroke-opacity="0.18" stroke-width="1.2" />
+      <g class="hero-ring-orbit ring-1">
+        <circle cx="300" cy="300" r="140" stroke="#B8860B" stroke-opacity="0.32" stroke-width="1.2" />
+        <circle cx="440" cy="300" r="3.2" fill="#C9A24A" fill-opacity="0.75" />
+      </g>
+      <g class="hero-ring-orbit ring-2">
+        <circle cx="300" cy="300" r="205" stroke="#B8860B" stroke-opacity="0.24" stroke-width="1.2" stroke-dasharray="14 8" />
+        <circle cx="95" cy="300" r="3.8" fill="#B8860B" fill-opacity="0.65" />
+      </g>
+      <g class="hero-ring-orbit ring-3">
+        <circle cx="300" cy="300" r="270" stroke="#B8860B" stroke-opacity="0.18" stroke-width="1.2" />
+        <circle cx="300" cy="30" r="2.8" fill="#C9A24A" fill-opacity="0.7" />
+        <circle cx="300" cy="570" r="2.2" fill="#B8860B" fill-opacity="0.5" />
+      </g>
     </svg>
+
+    <div class="hero-particles" aria-hidden="true">
+      <span class="gold-particle p1"></span>
+      <span class="gold-particle p2"></span>
+      <span class="gold-particle p3"></span>
+      <span class="gold-particle p4"></span>
+      <span class="gold-particle p5"></span>
+      <span class="gold-particle p6"></span>
+      <span class="gold-particle p7"></span>
+      <span class="gold-particle p8"></span>
+      <span class="gold-particle p9"></span>
+      <span class="gold-particle p10"></span>
+    </div>
 
     <div class="container hero-inner">
       <div>

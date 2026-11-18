@@ -377,7 +377,7 @@ button, input, select, textarea {
   border-bottom: 1px solid rgba(184, 134, 11, 0.2);
 }
 
-/* Círculos geométricos dourados concêntricos iguais ao site oficial */
+/* Círculos geométricos dourados concêntricos com movimento sutil */
 .hero-rings {
   position: absolute;
   top: -120px;
@@ -386,6 +386,103 @@ button, input, select, textarea {
   height: 620px;
   pointer-events: none;
   z-index: 1;
+  animation: heroRingsBreath 14s ease-in-out infinite;
+}
+
+.hero-ring-orbit {
+  transform-box: view-box;
+  transform-origin: 300px 300px;
+  will-change: transform;
+}
+
+.hero-ring-orbit.ring-1 {
+  animation: ringSpin 46s linear infinite;
+}
+
+.hero-ring-orbit.ring-2 {
+  animation: ringSpinReverse 64s linear infinite;
+}
+
+.hero-ring-orbit.ring-3 {
+  animation: ringSpin 86s linear infinite;
+}
+
+@keyframes ringSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ringSpinReverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes heroRingsBreath {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+/* Partículas douradas flutuantes (CSS puro GPU — leve no celular) */
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gold-particle {
+  position: absolute;
+  bottom: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #E6C775 0%, #B8860B 70%, transparent 100%);
+  box-shadow: 0 0 10px rgba(201, 162, 74, 0.55);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: goldDrift var(--dur, 16s) ease-in-out var(--delay, 0s) infinite;
+}
+
+.gold-particle.p1  { left: 7%;  width: 5px; height: 5px; --dur: 15s; --delay: -2s;  --drift: 18px; }
+.gold-particle.p2  { left: 16%; width: 7px; height: 7px; --dur: 19s; --delay: -8s;  --drift: -16px; }
+.gold-particle.p3  { left: 26%; width: 4px; height: 4px; --dur: 14s; --delay: -5s;  --drift: 14px; }
+.gold-particle.p4  { left: 38%; width: 6px; height: 6px; --dur: 21s; --delay: -11s; --drift: -20px; }
+.gold-particle.p5  { left: 49%; width: 5px; height: 5px; --dur: 16s; --delay: -3s;  --drift: 22px; }
+.gold-particle.p6  { left: 61%; width: 8px; height: 8px; --dur: 22s; --delay: -14s; --drift: -18px; }
+.gold-particle.p7  { left: 72%; width: 4px; height: 4px; --dur: 13s; --delay: -6s;  --drift: 16px; }
+.gold-particle.p8  { left: 81%; width: 6px; height: 6px; --dur: 18s; --delay: -1s;  --drift: -14px; }
+.gold-particle.p9  { left: 89%; width: 5px; height: 5px; --dur: 17s; --delay: -9s;  --drift: 12px; }
+.gold-particle.p10 { left: 95%; width: 7px; height: 7px; --dur: 20s; --delay: -4s;  --drift: -16px; }
+
+@keyframes goldDrift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.75);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.62;
+  }
+  55% {
+    transform: translate3d(var(--drift, 16px), -220px, 0) scale(1);
+    opacity: 0.45;
+  }
+  85% {
+    opacity: 0.22;
+  }
+  100% {
+    transform: translate3d(calc(var(--drift, 16px) * -0.6), -430px, 0) scale(0.6);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rings,
+  .hero-ring-orbit,
+  .gold-particle {
+    animation: none !important;
+  }
+  .gold-particle {
+    display: none;
+  }
 }
 
 .hero-inner {
