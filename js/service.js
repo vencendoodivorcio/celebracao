@@ -101,9 +101,17 @@
   }
 
   function writeLocalRecords(records) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    } catch (err) {
+      console.warn("Não foi possível salvar no localStorage:", err);
+    }
     if (broadcastChannel) {
-      broadcastChannel.postMessage({ type: "RECORDS_UPDATED", at: Date.now() });
+      try {
+        broadcastChannel.postMessage({ type: "RECORDS_UPDATED", at: Date.now() });
+      } catch (_) {
+        // Ignora erro de canal fechado
+      }
     }
   }
 
@@ -157,17 +165,57 @@
      Firebase Firestore (carregado sob demanda apenas em mode: "online")
      ======================================================================== */
 
+  function withTimeout(promise, ms, timeoutMessage) {
+    return new Promise(function (resolve, reject) {
+      const timer = setTimeout(function () {
+        const err = new Error(timeoutMessage || "Tempo limite de conexão excedido.");
+        err.code = "network-timeout";
+        reject(err);
+      }, ms);
+
+      promise.then(
+        function (val) {
+          clearTimeout(timer);
+          resolve(val);
+        },
+        function (err) {
+          clearTimeout(timer);
+          reject(err);
+        }
+      );
+    });
+  }
+
   function loadScript(src) {
     return new Promise(function (resolve, reject) {
       const existing = document.querySelector('script[src="' + src + '"]');
-      if (existing) {
+      if (existing && existing.dataset.loaded === "1") {
         resolve();
         return;
       }
+      if (existing) {
+        existing.remove();
+      }
+
       const script = document.createElement("script");
       script.src = src;
-      script.onload = resolve;
+      script.async = true;
+
+      const timer = setTimeout(function () {
+        script.remove();
+        const err = new Error("Tempo esgotado ao carregar: " + src);
+        err.code = "network-timeout";
+        reject(err);
+      }, 15000);
+
+      script.onload = function () {
+        clearTimeout(timer);
+        script.dataset.loaded = "1";
+        resolve();
+      };
       script.onerror = function () {
+        clearTimeout(timer);
+        script.remove();
         reject(new Error("Falha ao carregar script: " + src));
       };
       document.head.appendChild(script);
@@ -187,9 +235,20 @@
         firestoreDb = window.firebase.firestore();
         firebaseAuth = window.firebase.auth();
         return firestoreDb;
-      })();
+      })().catch(function (err) {
+        // Libera para permitir nova tentativa se a internet oscilar
+        firebaseLoadPromise = null;
+        throw err;
+      });
     }
     return firebaseLoadPromise;
+  }
+
+  function preloadFirebase() {
+    if (!isOnlineMode()) return;
+    ensureFirebase().catch(function () {
+      // Silencioso no pré-carregamento; nova tentativa acontece no envio
+    });
   }
 
   async function ensureAuth() {
@@ -256,12 +315,16 @@
       };
     }
 
-    // Modo ONLINE: salva no Firebase + Google Forms simultaneamente
+    // Modo ONLINE: salva no Firebase + Google Forms simultaneamente (com timeout contra travamento)
     const db = await ensureFirebase();
     const colName = window.APP_CONFIG.firebase.collectionName || "levantamento_casais_2027";
 
     const [fbResult, gfResult] = await Promise.allSettled([
-      db.collection(colName).doc(record.id).set(record),
+      withTimeout(
+        db.collection(colName).doc(record.id).set(record),
+        15000,
+        "A conexão demorou muito para responder. Tente enviar novamente."
+      ),
       submitToGoogleForms(record)
     ]);
 
@@ -501,6 +564,7 @@
 
   window.CasamentoService = {
     isOnlineMode: isOnlineMode,
+    preloadFirebase: preloadFirebase,
     calcularElegibilidade: calcularElegibilidade,
     signIn: signIn,
     signOut: signOut,

@@ -31,6 +31,30 @@
   const blocoDetalhesUniversal = document.getElementById("blocoDetalhesUniversal");
 
   let autoMarkedChurchNo = false;
+  let isSubmitting = false;
+
+  function safeGetStorage(key) {
+    try {
+      return localStorage.getItem(key) || "";
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function safeSetStorage(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (_) {
+      // Ignora em modo anônimo / WebView restrito
+    }
+  }
+
+  function syncSelectedCards() {
+    form.querySelectorAll(".option-card").forEach(function (card) {
+      const input = card.querySelector("input");
+      card.classList.toggle("is-selected", Boolean(input && input.checked));
+    });
+  }
 
   // Banners dinâmicos
   const eligibilityBanner = document.getElementById("eligibilityBanner");
@@ -72,7 +96,7 @@
      ======================================================================== */
 
   function renderVolunteerState() {
-    const saved = (localStorage.getItem(VOLUNTEER_KEY) || "").trim();
+    const saved = safeGetStorage(VOLUNTEER_KEY).trim();
     if (saved) {
       volunteerInput.value = saved;
       volunteerSavedName.textContent = saved;
@@ -91,7 +115,7 @@
       volunteerInput.focus();
       return;
     }
-    localStorage.setItem(VOLUNTEER_KEY, name);
+    safeSetStorage(VOLUNTEER_KEY, name);
     renderVolunteerState();
     showToast("Voluntário salvo para os próximos cadastros!");
   }
@@ -188,6 +212,8 @@
       blocoDetalhesUniversal.classList.add("hidden");
     }
 
+    syncSelectedCards();
+
     // Banner de elegibilidade em tempo real
     const dataSnapshot = {
       casadoIgreja: getRadioValue("casadoIgreja"),
@@ -220,6 +246,9 @@
   }
 
   form.addEventListener("change", function (e) {
+    if (e.target && e.target.type === "radio") {
+      syncSelectedCards();
+    }
     if (
       [
         "casadoCivil",
@@ -263,16 +292,16 @@
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
+    if (isSubmitting) return;
 
     const voluntario = volunteerInput.value.trim();
     if (!voluntario) {
-      showToast("Informe o nome do voluntário antes de enviar.");
       volunteerEditWrap.classList.remove("hidden");
       volunteerSavedWrap.classList.add("hidden");
       volunteerInput.focus();
-      return;
+      return showValidationError("Informe o nome do voluntário antes de enviar.", volunteerInput);
     }
-    localStorage.setItem(VOLUNTEER_KEY, voluntario);
+    safeSetStorage(VOLUNTEER_KEY, voluntario);
     renderVolunteerState();
 
     const situacaoCasal = getRadioValue("situacaoCasal");
@@ -285,49 +314,68 @@
     const assinouAta = getRadioValue("assinouAta");
     const proximoPasso = getRadioValue("proximoPasso");
 
-    const nomePessoa = document.getElementById("nomePessoa").value.trim();
+    const nomePessoaEl = document.getElementById("nomePessoa");
+    const nomePessoa = nomePessoaEl.value.trim();
     const nomeConjuge = document.getElementById("nomeConjuge").value.trim();
     const whatsapp = whatsappInput.value.trim();
     const bairroIgreja = document.getElementById("bairroIgreja").value.trim();
     const observacoes = document.getElementById("observacoes").value.trim();
 
-    // Validações condicionais
+    // Validações condicionais com rolagem direta para o campo pendente
     if (!situacaoCasal) {
-      return showValidationError("Selecione a situação atual do casal.");
+      return showValidationError("Selecione a situação atual do casal.", "fgSituacao");
     }
     if (!casadoCivil) {
-      return showValidationError("Informe se o casal é casado no civil.");
+      return showValidationError("Informe se o casal é casado no civil.", "fgCivil");
     }
     if (casadoCivil === "Não" && !condicaoCivil) {
-      return showValidationError("Informe se o casal tem condições de pagar o casamento civil.");
+      return showValidationError(
+        "Informe se o casal tem condições de pagar o casamento civil.",
+        "blocoCondicaoCivil"
+      );
     }
     if (!casadoIgreja) {
-      return showValidationError("Informe se já são casados na igreja.");
+      return showValidationError("Informe se já são casados na igreja.", "fgIgreja");
     }
     if (casadoIgreja === "Não" && !sonhoAltar) {
-      return showValidationError("Informe se têm o sonho/interesse de casar na igreja.");
+      return showValidationError(
+        "Informe se têm o sonho/interesse de casar na igreja.",
+        "blocoNaoCasadoIgreja"
+      );
     }
     if (casadoIgreja === "Sim" && !igrejaCasamento) {
-      return showValidationError("Informe onde foi o casamento religioso.");
+      return showValidationError(
+        "Informe onde foi o casamento religioso.",
+        "blocoSimCasadoIgreja"
+      );
     }
     if (casadoIgreja === "Sim" && igrejaCasamento === "Na Universal") {
       if (!fezCurso) {
-        return showValidationError("Informe se fizeram o curso preparatório.");
+        return showValidationError(
+          "Informe se fizeram o curso preparatório.",
+          "blocoDetalhesUniversal"
+        );
       }
       if (!assinouAta) {
-        return showValidationError("Informe se assinaram ata na cerimônia.");
+        return showValidationError(
+          "Informe se assinaram ata na cerimônia.",
+          "blocoDetalhesUniversal"
+        );
       }
     }
     if (!nomePessoa) {
-      document.getElementById("nomePessoa").focus();
-      return showValidationError("Informe o nome da pessoa abordada.");
+      nomePessoaEl.focus();
+      return showValidationError("Informe o nome da pessoa abordada.", nomePessoaEl);
     }
     if (whatsapp.replace(/\D/g, "").length < 10) {
       whatsappInput.focus();
-      return showValidationError("Informe um WhatsApp/telefone válido com DDD.");
+      return showValidationError("Informe um WhatsApp/telefone válido com DDD.", whatsappInput);
     }
     if (!proximoPasso) {
-      return showValidationError("Selecione o nível de interesse / próximo passo.");
+      return showValidationError(
+        "Selecione o nível de interesse / próximo passo.",
+        "fgProximoPasso"
+      );
     }
 
     const payload = {
@@ -348,6 +396,7 @@
       observacoes: observacoes
     };
 
+    isSubmitting = true;
     btnSubmit.disabled = true;
     btnSubmit.textContent = "Enviando registro...";
 
@@ -387,10 +436,13 @@
       console.error(err);
       if (err && err.code === "permission-denied") {
         showToast("Permissão negada no Firestore. Verifique se publicou as Regras de segurança.");
+      } else if (err && err.code === "network-timeout") {
+        showToast("Conexão lenta ou instável. Tente enviar novamente.");
       } else {
         showToast("Erro ao salvar registro. Verifique a conexão com a internet.");
       }
     } finally {
+      isSubmitting = false;
       btnSubmit.disabled = false;
       btnSubmit.innerHTML =
         '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Enviar Levantamento';
@@ -411,8 +463,15 @@
      Utilitários
      ======================================================================== */
 
-  function showValidationError(msg) {
+  function showValidationError(msg, target) {
     showToast(msg);
+    const el = typeof target === "string" ? document.getElementById(target) : target;
+    if (el && typeof el.scrollIntoView === "function") {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.classList.remove("field-error-highlight");
+      void el.offsetWidth;
+      el.classList.add("field-error-highlight");
+    }
   }
 
   let toastTimer = null;
@@ -437,8 +496,11 @@
       .replace(/"/g, "&quot;");
   }
 
-  // Inicializa
+  // Inicializa e pré-carrega o SDK do Firebase em segundo plano
   initEnvironmentUI();
   renderVolunteerState();
   updateConditionalUI();
+  if (window.CasamentoService && window.CasamentoService.preloadFirebase) {
+    window.CasamentoService.preloadFirebase();
+  }
 })();

@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Painel em Tempo Real — Celebração dos Casamentos 2027</title>
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23203864'/%3E%3Ccircle cx='12.5' cy='17.5' r='6.5' fill='none' stroke='%23C9A24A' stroke-width='2.4'/%3E%3Ccircle cx='19.5' cy='17.5' r='6.5' fill='none' stroke='%23C9A24A' stroke-width='2.4'/%3E%3C/svg%3E"
+  />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -43,6 +48,15 @@
       </div>
     </div>
   </header>
+
+  <!-- Carregamento inicial (evita tela em branco enquanto valida o Firebase Auth) -->
+  <section id="loadingSection" class="auth-overlay">
+    <div class="auth-card" style="padding: 40px 28px;">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <h2 style="margin-top: 4px;">Conectando...</h2>
+      <p style="margin-bottom: 0;">Verificando acesso ao painel em tempo real.</p>
+    </div>
+  </section>
 
   <!-- Tela de Acesso da Equipe -->
   <section id="authSection" class="auth-overlay hidden">
@@ -211,13 +225,16 @@
             <circle cx="9.5" cy="13.5" r="5.5" />
             <circle cx="14.5" cy="13.5" r="5.5" />
           </svg>
-          <h3>Nenhum casal registrado ainda</h3>
-          <p>
-            Cadastre um casal na página do formulário (pode deixar aberta em outra aba para ver
-            chegando ao vivo) ou carregue exemplos para testar o painel.
+          <h3 id="emptyStateTitle">Nenhum casal registrado ainda</h3>
+          <p id="emptyStateDesc">
+            Assim que os voluntários enviarem cadastros no formulário, os casais aparecerão aqui
+            automaticamente em tempo real.
           </p>
           <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-            <a href="index.html#levantamento" class="btn btn-primary btn-sm">
+            <button type="button" id="btnEmptyResetFilters" class="btn btn-primary btn-sm hidden">
+              Limpar Filtros
+            </button>
+            <a id="btnEmptyGoForm" href="index.html#levantamento" class="btn btn-primary btn-sm">
               Ir para o Formulário
             </a>
             <button type="button" id="btnEmptySeed" class="btn btn-outline btn-sm">
@@ -254,6 +271,7 @@
           </label>
           <textarea
             id="modalNotasEquipe"
+            maxlength="1000"
             class="textarea"
             placeholder="Registre aqui o retorno do contato, envio de documentos, agendamento do civil..."
           ></textarea>
@@ -271,7 +289,7 @@
         </button>
 
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <a id="btnModalWhatsapp" href="#" target="_blank" rel="noopener" class="btn btn-whatsapp btn-sm">
+          <a id="btnModalWhatsapp" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm">
             Chamar no WhatsApp
           </a>
           <button type="button" id="btnSaveNotes" class="btn btn-primary btn-sm">

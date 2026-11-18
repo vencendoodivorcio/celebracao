@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Celebração dos Casamentos 2027 — Levantamento de Casais</title>
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23B8860B'/%3E%3Ccircle cx='12.5' cy='17.5' r='6.5' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3Ccircle cx='19.5' cy='17.5' r='6.5' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3C/svg%3E"
+  />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -155,6 +160,7 @@
                   id="voluntario"
                   name="voluntario"
                   type="text"
+                  maxlength="120"
                   class="input"
                   placeholder="Digite seu nome (fica salvo para os próximos)"
                   autocomplete="name"
@@ -189,7 +195,7 @@
             </div>
 
             <!-- 1. Situação atual -->
-            <div class="field-group">
+            <div id="fgSituacao" class="field-group">
               <label class="field-label">1. Situação atual do casal <span class="req">*</span></label>
               <div class="option-grid-3">
                 <label class="option-card">
@@ -211,7 +217,7 @@
             </div>
 
             <!-- 2. Casamento civil -->
-            <div class="field-group">
+            <div id="fgCivil" class="field-group">
               <label class="field-label">2. Já são casados no civil? <span class="req">*</span></label>
               <div class="option-grid-3">
                 <label class="option-card">
@@ -286,7 +292,7 @@
             </div>
 
             <!-- 3. Casamento na igreja -->
-            <div class="field-group">
+            <div id="fgIgreja" class="field-group">
               <div id="casadoIgrejaHeader">
                 <label class="field-label">
                   3. Já são casados na igreja (cerimônia religiosa)? <span class="req">*</span>
@@ -463,6 +469,7 @@
                   id="nomePessoa"
                   name="nomePessoa"
                   type="text"
+                  maxlength="120"
                   class="input"
                   placeholder="Ex.: Maria Aparecida"
                   required
@@ -477,6 +484,7 @@
                   id="nomeConjuge"
                   name="nomeConjuge"
                   type="text"
+                  maxlength="120"
                   class="input"
                   placeholder="Opcional na abordagem rápida"
                 />
@@ -493,6 +501,7 @@
                   name="whatsapp"
                   type="tel"
                   inputmode="numeric"
+                  maxlength="20"
                   class="input"
                   placeholder="(11) 99999-9999"
                   required
@@ -507,13 +516,14 @@
                   id="bairroIgreja"
                   name="bairroIgreja"
                   type="text"
+                  maxlength="120"
                   class="input"
                   placeholder="Ex.: Centro / Catedral"
                 />
               </div>
             </div>
 
-            <div class="field-group">
+            <div id="fgProximoPasso" class="field-group">
               <label class="field-label">
                 8. Nível de interesse / Próximo passo <span class="req">*</span>
               </label>
@@ -556,6 +566,7 @@
               <textarea
                 id="observacoes"
                 name="observacoes"
+                maxlength="1000"
                 class="textarea"
                 placeholder="Ex.: Melhor horário para ligar, dúvidas específicas que o casal teve..."
               ></textarea>
@@ -597,7 +608,7 @@
             <button type="button" id="btnNovoCadastro" class="btn btn-primary btn-lg">
               Cadastrar Próximo Casal
             </button>
-            <a href="painel.html" target="_blank" class="btn btn-outline btn-lg">
+            <a href="painel.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg">
               Ver no Painel da Equipe
             </a>
           </div>

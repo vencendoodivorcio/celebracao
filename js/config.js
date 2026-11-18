@@ -1,22 +1,19 @@
 /**
- * Configuração Central — Levantamento Celebração dos Casamentos 2027
+ * Configuração Central — Levantamento para Celebração 2027
  *
- * MODO ATUAL: "offline"
- * - Permite testar o site inteiro direto no computador (abrindo index.html e painel.html).
- * - Salva no navegador (localStorage) e sincroniza em tempo real entre abas abertas!
+ * MODO ATUAL: "online" (Firebase Firestore + Firebase Authentication)
+ * - Voluntários (index.html): enviam cadastros sem precisar de login.
+ * - Equipe (painel.html): acessa em tempo real com login E-mail/Senha do Firebase.
+ * - Planilha: exportação em 1 clique direto no painel (CSV/Excel).
  *
- * QUANDO FOR SUBIR PARA O GITHUB PAGES + FIREBASE + GOOGLE FORMS:
- * 1. Altere mode para "online"
- * 2. Preencha as credenciais do Firebase (firebase.config)
- * 3. Preencha a URL e os entry.IDs do Google Forms (googleForms)
- * Veja o passo a passo completo no arquivo GUIA-CONFIGURACAO.md.
+ * Veja GUIA-CONFIGURACAO.md para detalhes das Regras do Firestore.
  */
 
 window.APP_CONFIG = {
-  // "offline" = testes locais sem servidor | "online" = Firebase + Google Forms simultâneos
+  // "online" = Firebase em tempo real | "offline" = testes locais no navegador
   mode: "online",
 
-  // Código da equipe para acessar o painel (deixe "" para abrir direto sem senha)
+  // Usado apenas quando mode: "offline" (no modo online o login é via Firebase Auth)
   panelAccessCode: "equipe2027",
 
   // Link oficial de referência

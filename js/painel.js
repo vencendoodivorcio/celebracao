@@ -5,6 +5,7 @@
 (function () {
   const AUTH_SESSION_KEY = "celebracao_painel_unlocked";
 
+  const loadingSection = document.getElementById("loadingSection");
   const authSection = document.getElementById("authSection");
   const authForm = document.getElementById("authForm");
   const authSubtitle = document.getElementById("authSubtitle");
@@ -38,6 +39,10 @@
   // Tabela e Ações
   const tableBody = document.getElementById("recordsTableBody");
   const emptyState = document.getElementById("emptyState");
+  const emptyStateTitle = document.getElementById("emptyStateTitle");
+  const emptyStateDesc = document.getElementById("emptyStateDesc");
+  const btnEmptyResetFilters = document.getElementById("btnEmptyResetFilters");
+  const btnEmptyGoForm = document.getElementById("btnEmptyGoForm");
   const tableResponsive = document.getElementById("tableResponsive");
   const resultsCount = document.getElementById("resultsCount");
   const btnExportCsv = document.getElementById("btnExportCsv");
@@ -59,6 +64,32 @@
   let allRecords = [];
   let selectedRecordId = null;
   let unsubscribeFn = null;
+  let isSubscribing = false;
+  let searchDebounceTimer = null;
+
+  function safeGetSession(key) {
+    try {
+      return sessionStorage.getItem(key) || "";
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function safeSetSession(key, val) {
+    try {
+      sessionStorage.setItem(key, val);
+    } catch (_) {
+      // Ignora em modo anônimo / WebView restrito
+    }
+  }
+
+  function safeRemoveSession(key) {
+    try {
+      sessionStorage.removeItem(key);
+    } catch (_) {
+      // Ignora em modo anônimo / WebView restrito
+    }
+  }
 
   /* ========================================================================
      Ambiente & Autenticação
@@ -118,7 +149,7 @@
     }
 
     const requiredCode = (window.APP_CONFIG && window.APP_CONFIG.panelAccessCode) || "";
-    if (!requiredCode || sessionStorage.getItem(AUTH_SESSION_KEY) === "1") {
+    if (!requiredCode || safeGetSession(AUTH_SESSION_KEY) === "1") {
       unlockDashboard();
     } else {
       lockDashboard();
@@ -184,7 +215,7 @@
     // Modo offline
     const expected = (window.APP_CONFIG && window.APP_CONFIG.panelAccessCode) || "";
     if (authPasswordInput.value.trim() === expected) {
-      sessionStorage.setItem(AUTH_SESSION_KEY, "1");
+      safeSetSession(AUTH_SESSION_KEY, "1");
       authError.classList.add("hidden");
       unlockDashboard();
     } else {
@@ -198,7 +229,7 @@
     btnLogout.addEventListener("click", async function () {
       try {
         await window.CasamentoService.signOut();
-        sessionStorage.removeItem(AUTH_SESSION_KEY);
+        safeRemoveSession(AUTH_SESSION_KEY);
         showToast("Você saiu do painel.");
       } catch (err) {
         console.error(err);
@@ -208,34 +239,43 @@
   }
 
   function lockDashboard() {
+    if (loadingSection) loadingSection.classList.add("hidden");
     if (unsubscribeFn) {
       unsubscribeFn();
       unsubscribeFn = null;
     }
+    isSubscribing = false;
     allRecords = [];
+    closeModal();
     btnLogout.classList.add("hidden");
     dashboardSection.classList.add("hidden");
     authSection.classList.remove("hidden");
   }
 
   async function unlockDashboard() {
+    if (loadingSection) loadingSection.classList.add("hidden");
     authSection.classList.add("hidden");
     dashboardSection.classList.remove("hidden");
-    if (!unsubscribeFn) {
-      unsubscribeFn = await window.CasamentoService.subscribeRecords(
-        function (records) {
-          allRecords = records;
-          renderDashboard();
-        },
-        function (err) {
-          console.error(err);
-          if (err && err.code === "permission-denied") {
-            showToast("Sem permissão no Firestore. Verifique se publicou as Regras de segurança.");
-          } else {
-            showToast("Erro ao conectar ao banco de dados.");
+    if (!unsubscribeFn && !isSubscribing) {
+      isSubscribing = true;
+      try {
+        unsubscribeFn = await window.CasamentoService.subscribeRecords(
+          function (records) {
+            allRecords = records;
+            renderDashboard();
+          },
+          function (err) {
+            console.error(err);
+            if (err && err.code === "permission-denied") {
+              showToast("Sem permissão no Firestore. Verifique se publicou as Regras de segurança.");
+            } else {
+              showToast("Erro ao conectar ao banco de dados.");
+            }
           }
-        }
-      );
+        );
+      } finally {
+        isSubscribing = false;
+      }
     }
   }
 
@@ -308,6 +348,33 @@
     if (filtered.length === 0) {
       tableResponsive.classList.add("hidden");
       emptyState.classList.remove("hidden");
+
+      const hasFilters =
+        Boolean(searchInput.value.trim()) ||
+        Boolean(filterElegibilidade.value) ||
+        Boolean(filterStatus.value) ||
+        Boolean(filterCivil.value);
+
+      if (allRecords.length > 0 && hasFilters) {
+        emptyStateTitle.textContent = "Nenhum casal encontrado com os filtros atuais";
+        emptyStateDesc.textContent =
+          "Limpe os filtros ou ajuste a busca para visualizar os " +
+          allRecords.length +
+          " registros disponíveis.";
+        btnEmptyResetFilters.classList.remove("hidden");
+        btnEmptyGoForm.classList.add("hidden");
+        if (btnEmptySeed) btnEmptySeed.classList.add("hidden");
+      } else {
+        emptyStateTitle.textContent = "Nenhum casal registrado ainda";
+        emptyStateDesc.textContent = window.CasamentoService.isOnlineMode()
+          ? "Assim que os voluntários enviarem cadastros no formulário, os casais aparecerão aqui automaticamente em tempo real."
+          : "Cadastre um casal na página do formulário ou carregue exemplos para testar o painel offline.";
+        btnEmptyResetFilters.classList.add("hidden");
+        btnEmptyGoForm.classList.remove("hidden");
+        if (btnEmptySeed) {
+          btnEmptySeed.classList.toggle("hidden", window.CasamentoService.isOnlineMode());
+        }
+      }
       return;
     }
 
@@ -402,7 +469,7 @@
           '<div class="row-actions">' +
           '<a class="btn btn-sm btn-whatsapp" href="' +
           waUrl +
-          '" target="_blank" rel="noopener" title="Chamar no WhatsApp">WhatsApp</a>' +
+          '" target="_blank" rel="noopener noreferrer" title="Chamar no WhatsApp">WhatsApp</a>' +
           '<button type="button" class="btn btn-sm btn-outline" data-action="details" data-id="' +
           escapeHtml(rec.id) +
           '">Detalhes</button>' +
@@ -420,14 +487,20 @@
 
   tableBody.addEventListener("change", async function (e) {
     if (e.target.dataset.action === "status") {
-      const id = e.target.dataset.id;
-      const novoStatus = e.target.value;
+      const selectEl = e.target;
+      const id = selectEl.dataset.id;
+      const novoStatus = selectEl.value;
+      selectEl.className = "status-select status-" + novoStatus;
+      selectEl.disabled = true;
       try {
         await window.CasamentoService.updateRecord(id, { statusAtendimento: novoStatus });
         showToast("Status atualizado!");
       } catch (err) {
         console.error(err);
         showToast("Erro ao atualizar status.");
+        renderDashboard();
+      } finally {
+        selectEl.disabled = false;
       }
     }
   });
@@ -512,9 +585,16 @@
   detailModal.addEventListener("click", function (e) {
     if (e.target === detailModal) closeModal();
   });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !detailModal.classList.contains("hidden")) {
+      closeModal();
+    }
+  });
 
   btnSaveNotes.addEventListener("click", async function () {
-    if (!selectedRecordId) return;
+    if (!selectedRecordId || btnSaveNotes.disabled) return;
+    btnSaveNotes.disabled = true;
+    btnSaveNotes.textContent = "Salvando...";
     try {
       await window.CasamentoService.updateRecord(selectedRecordId, {
         notasEquipe: modalNotasEquipe.value.trim()
@@ -524,12 +604,17 @@
     } catch (err) {
       console.error(err);
       showToast("Erro ao salvar anotação.");
+    } finally {
+      btnSaveNotes.disabled = false;
+      btnSaveNotes.textContent = "Salvar Anotações";
     }
   });
 
   btnDeleteRecord.addEventListener("click", async function () {
-    if (!selectedRecordId) return;
+    if (!selectedRecordId || btnDeleteRecord.disabled) return;
     if (!confirm("Tem certeza que deseja excluir este registro?")) return;
+    btnDeleteRecord.disabled = true;
+    btnDeleteRecord.textContent = "Excluindo...";
     try {
       await window.CasamentoService.deleteRecord(selectedRecordId);
       showToast("Registro excluído.");
@@ -537,6 +622,9 @@
     } catch (err) {
       console.error(err);
       showToast("Erro ao excluir registro.");
+    } finally {
+      btnDeleteRecord.disabled = false;
+      btnDeleteRecord.textContent = "Excluir registro";
     }
   });
 
@@ -544,18 +632,27 @@
      Filtros, Exportação CSV e Ferramentas Offline
      ======================================================================== */
 
-  [searchInput, filterElegibilidade, filterStatus, filterCivil].forEach(function (el) {
-    el.addEventListener("input", renderDashboard);
+  searchInput.addEventListener("input", function () {
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(renderDashboard, 120);
+  });
+
+  [filterElegibilidade, filterStatus, filterCivil].forEach(function (el) {
     el.addEventListener("change", renderDashboard);
   });
 
-  btnLimparFiltros.addEventListener("click", function () {
+  function resetFilters() {
     searchInput.value = "";
     filterElegibilidade.value = "";
     filterStatus.value = "";
     filterCivil.value = "";
     renderDashboard();
-  });
+  }
+
+  btnLimparFiltros.addEventListener("click", resetFilters);
+  if (btnEmptyResetFilters) {
+    btnEmptyResetFilters.addEventListener("click", resetFilters);
+  }
 
   btnExportCsv.addEventListener("click", function () {
     const rows = getFilteredRecords();
@@ -589,7 +686,7 @@
     const lines = [headers.join(";")];
     rows.forEach(function (r) {
       const cols = [
-        formatDateTime(r.createdAt),
+        formatDateTimeFull(r.createdAt),
         r.voluntario,
         r.nomePessoa,
         r.nomeConjuge,
@@ -609,8 +706,12 @@
         r.observacoes,
         r.notasEquipe
       ].map(function (v) {
-        const text = String(v || "").replace(/"/g, '""').replace(/\r?\n/g, " ");
-        return '"' + text + '"';
+        let text = String(v || "").replace(/\r?\n/g, " ");
+        // Neutraliza fórmula acidental no Excel (=, +, -, @)
+        if (/^[=+\-@]/.test(text)) {
+          text = "'" + text;
+        }
+        return '"' + text.replace(/"/g, '""') + '"';
       });
       lines.push(cols.join(";"));
     });
@@ -675,6 +776,22 @@
       return d.toLocaleString("pt-BR", {
         day: "2-digit",
         month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    } catch (_) {
+      return iso;
+    }
+  }
+
+  function formatDateTimeFull(iso) {
+    if (!iso) return "-";
+    try {
+      const d = new Date(iso);
+      return d.toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
         hour: "2-digit",
         minute: "2-digit"
       });
