@@ -14,24 +14,25 @@
 
 window.APP_CONFIG = {
   // "offline" = testes locais sem servidor | "online" = Firebase + Google Forms simultâneos
-  mode: "offline",
+  mode: "online",
 
-  // Código de acesso simples para o painel da equipe (deixe "" para abrir direto sem senha)
+  // Código da equipe para acessar o painel (deixe "" para abrir direto sem senha)
   panelAccessCode: "equipe2027",
 
   // Link oficial de referência
   officialPageUrl: "https://casamento.universal.org/",
 
-  // Configurações do Firebase Firestore (preencher quando passar para mode: "online")
+  // Configurações do Firebase Firestore
   firebase: {
     collectionName: "levantamento_casais_2027",
     config: {
-      apiKey: "SUA_API_KEY",
-      authDomain: "SEU_PROJETO.firebaseapp.com",
-      projectId: "SEU_PROJETO",
-      storageBucket: "SEU_PROJETO.appspot.com",
-      messagingSenderId: "SEU_SENDER_ID",
-      appId: "SEU_APP_ID"
+      apiKey: "AIzaSyAz4686JOpM_KbIoSufD_8noBsjn32VtN8",
+      authDomain: "celebra-fee0b.firebaseapp.com",
+      projectId: "celebra-fee0b",
+      storageBucket: "celebra-fee0b.firebasestorage.app",
+      messagingSenderId: "554663223756",
+      appId: "1:554663223756:web:16daa134ae35e0c71dfd69",
+      measurementId: "G-9939GKZCMX"
     }
   },
 

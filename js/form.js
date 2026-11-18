@@ -45,10 +45,20 @@
 
   function initEnvironmentUI() {
     const online = window.CasamentoService.isOnlineMode();
+    const formsEnabled =
+      window.APP_CONFIG &&
+      window.APP_CONFIG.googleForms &&
+      window.APP_CONFIG.googleForms.enabled;
+
     if (online) {
       envBadge.classList.add("online");
-      envBadge.innerHTML = '<span class="env-dot"></span> Online • Firebase + Forms';
-      syncNoteText.textContent = "Envio simultâneo para o Painel (Firebase) e Google Forms.";
+      if (formsEnabled) {
+        envBadge.innerHTML = '<span class="env-dot"></span> Online • Firebase + Forms';
+        syncNoteText.textContent = "Envio simultâneo para o Painel (Firebase) e Google Forms.";
+      } else {
+        envBadge.innerHTML = '<span class="env-dot"></span> Online • Firebase Ao Vivo';
+        syncNoteText.textContent = "Enviado em tempo real para o Painel da Equipe (Firebase).";
+      }
     } else {
       envBadge.classList.remove("online");
       envBadge.innerHTML = '<span class="env-dot"></span> Modo Offline (Preview Local)';
