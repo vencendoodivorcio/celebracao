@@ -524,7 +524,7 @@
 
     const details = [
       ["WhatsApp", rec.whatsapp],
-      ["Bairro / Igreja", rec.bairroIgreja || "Não informado"],
+      ["Bairro onde mora", rec.bairroIgreja || "Não informado"],
       ["Situação Atual", rec.situacaoCasal],
       [
         "Casado no Civil?",
@@ -667,7 +667,7 @@
       "Pessoa Abordada",
       "Cônjuge",
       "WhatsApp",
-      "Bairro/Igreja",
+      "Bairro onde mora",
       "Situação Atual",
       "Casado no Civil",
       "Condição Civil / Gratuidade",
