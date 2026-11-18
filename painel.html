@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel em Tempo Real — Celebração dos Casamentos 2027</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=MonteCarlo&family=Montserrat:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Topbar Oficial (Fundo Dourado #B8860B) -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+            <circle cx="9.5" cy="13.5" r="5.5" />
+            <circle cx="14.5" cy="13.5" r="5.5" />
+            <path d="M12 4.5l1.5 2.5h-3L12 4.5z" fill="currentColor" stroke="none" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">Levantamento para Celebração</span>
+          <span class="brand-subtitle">Painel da Equipe • Tempo Real</span>
+        </div>
+      </a>
+
+      <div class="topbar-actions">
+        <span id="envBadge" class="env-badge">
+          <span class="env-dot"></span> Modo Offline (Preview Local)
+        </span>
+        <a href="index.html" class="btn-header-access">
+          + Novo Levantamento
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Tela de Acesso da Equipe -->
+  <section id="authSection" class="auth-overlay hidden">
+    <div class="auth-card">
+      <div class="brand-mark brand-mark-navy" style="margin: 0 auto;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+      </div>
+      <h2>Acesso da Equipe</h2>
+      <div class="rings-divider" aria-hidden="true">
+        <svg width="22" height="16" viewBox="0 0 28 18" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="10.5" cy="9" r="6.5" />
+          <circle cx="17.5" cy="9" r="6.5" />
+        </svg>
+      </div>
+      <p>Informe o código da equipe para visualizar os contatos dos casais em tempo real.</p>
+
+      <form id="authForm">
+        <div class="field-group" style="text-align: left;">
+          <label class="field-label" for="accessCodeInput">Código de acesso</label>
+          <input
+            id="accessCodeInput"
+            type="password"
+            class="input"
+            placeholder="Digite o código da equipe"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-gold btn-lg" style="width: 100%;">
+          Entrar no Painel
+        </button>
+        <div id="authError" class="auth-error hidden">Código incorreto. Tente novamente.</div>
+        <div id="authOfflineHint" class="auth-hint hidden"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Dashboard Principal -->
+  <main id="dashboardSection" class="dashboard-main hidden">
+    <div class="container">
+      <div class="dashboard-header">
+        <div>
+          <span class="live-pill">
+            <span class="env-dot"></span> Sincronização em tempo real
+          </span>
+          <h1>Acompanhamento de Casais</h1>
+          <p id="resultsCount">0 casais encontrados</p>
+        </div>
+
+        <div class="dashboard-header-actions">
+          <div id="offlineTools" class="dashboard-header-actions hidden">
+            <button type="button" id="btnSeedDemo" class="btn btn-outline btn-sm">
+              Carregar 5 exemplos
+            </button>
+            <button type="button" id="btnClearDemo" class="btn btn-ghost btn-sm">
+              Limpar testes
+            </button>
+          </div>
+          <button type="button" id="btnExportCsv" class="btn btn-gold btn-sm">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Exportar CSV (Excel)
+          </button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <section class="kpi-grid" aria-label="Resumo numérico">
+        <div class="kpi-card">
+          <div class="kpi-label">Total Abordados</div>
+          <div id="kpiTotal" class="kpi-value">0</div>
+        </div>
+        <div class="kpi-card accent-green">
+          <div class="kpi-label">Elegíveis</div>
+          <div id="kpiElegiveis" class="kpi-value">0</div>
+        </div>
+        <div class="kpi-card accent-primary">
+          <div class="kpi-label">Aguardando Contato</div>
+          <div id="kpiNovos" class="kpi-value">0</div>
+        </div>
+        <div class="kpi-card accent-info">
+          <div class="kpi-label">Sem Civil</div>
+          <div id="kpiSemCivil" class="kpi-value">0</div>
+        </div>
+        <div class="kpi-card accent-gold">
+          <div class="kpi-label">Inscritos</div>
+          <div id="kpiInscritos" class="kpi-value">0</div>
+        </div>
+      </section>
+
+      <!-- Barra de Filtros -->
+      <section class="filters-bar" aria-label="Filtros">
+        <input
+          id="searchInput"
+          type="search"
+          class="input"
+          placeholder="Buscar por nome, WhatsApp, bairro ou voluntário..."
+        />
+
+        <select id="filterElegibilidade" class="select" aria-label="Filtrar por elegibilidade">
+          <option value="">Elegibilidade: Todas</option>
+          <option value="elegivel">Somente Elegíveis</option>
+          <option value="verificar">Verificar Histórico</option>
+          <option value="nao_elegivel">Já casado na Universal</option>
+        </select>
+
+        <select id="filterStatus" class="select" aria-label="Filtrar por status de atendimento">
+          <option value="">Atendimento: Todos</option>
+          <option value="novo">Novo (Aguardando)</option>
+          <option value="em_contato">Em contato</option>
+          <option value="inscrito">Inscrito</option>
+          <option value="sem_interesse">Sem interesse</option>
+        </select>
+
+        <select id="filterCivil" class="select" aria-label="Filtrar por situação civil">
+          <option value="">Civil: Todos</option>
+          <option value="gratuidade">Sem civil — Gratuidade (&lt; 2 SM)</option>
+          <option value="Não">Sem civil (todos)</option>
+          <option value="Em andamento">Civil em andamento</option>
+          <option value="Sim">Já casado no civil</option>
+        </select>
+
+        <button type="button" id="btnLimparFiltros" class="btn btn-ghost btn-sm">
+          Limpar
+        </button>
+      </section>
+
+      <!-- Tabela de Casais -->
+      <section class="table-card">
+        <div id="tableResponsive" class="table-responsive hidden">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Casal / Contato</th>
+                <th>Triagem / Civil</th>
+                <th>Situação e Interesse</th>
+                <th>Voluntário / Hora</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="recordsTableBody"></tbody>
+          </table>
+        </div>
+
+        <div id="emptyState" class="empty-state">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--dourado)" stroke-width="1.6">
+            <circle cx="9.5" cy="13.5" r="5.5" />
+            <circle cx="14.5" cy="13.5" r="5.5" />
+          </svg>
+          <h3>Nenhum casal registrado ainda</h3>
+          <p>
+            Cadastre um casal na página do formulário (pode deixar aberta em outra aba para ver
+            chegando ao vivo) ou carregue exemplos para testar o painel.
+          </p>
+          <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <a href="index.html#levantamento" class="btn btn-primary btn-sm">
+              Ir para o Formulário
+            </a>
+            <button type="button" id="btnEmptySeed" class="btn btn-outline btn-sm">
+              Carregar 5 Casais de Exemplo
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Modal de Detalhes do Casal -->
+  <div id="detailModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Detalhes do Casal</h3>
+        <button type="button" id="btnCloseModal" class="btn btn-ghost btn-sm">Fechar ✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="modalGrid" class="detail-grid"></div>
+
+        <div class="field-group">
+          <span class="field-label">Observações do Voluntário</span>
+          <div
+            id="modalObsVoluntario"
+            style="padding: 12px; border-radius: 8px; background: var(--bg-page); border: 1px solid var(--border); font-size: 0.88rem;"
+          ></div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="modalNotasEquipe">
+            Anotações da Equipe de Acompanhamento
+          </label>
+          <textarea
+            id="modalNotasEquipe"
+            class="textarea"
+            placeholder="Registre aqui o retorno do contato, envio de documentos, agendamento do civil..."
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          id="btnDeleteRecord"
+          class="btn btn-ghost btn-sm"
+          style="color: var(--danger);"
+        >
+          Excluir registro
+        </button>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a id="btnModalWhatsapp" href="#" target="_blank" rel="noopener" class="btn btn-whatsapp btn-sm">
+            Chamar no WhatsApp
+          </a>
+          <button type="button" id="btnSaveNotes" class="btn btn-primary btn-sm">
+            Salvar Anotações
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/service.js"></script>
+  <script src="js/painel.js"></script>
+</body>
+</html>

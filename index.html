@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Celebração dos Casamentos 2027 — Levantamento de Casais</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=MonteCarlo&family=Montserrat:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Topbar Oficial (Fundo Dourado #B8860B) -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+            <circle cx="9.5" cy="13.5" r="5.5" />
+            <circle cx="14.5" cy="13.5" r="5.5" />
+            <path d="M12 4.5l1.5 2.5h-3L12 4.5z" fill="currentColor" stroke="none" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">Levantamento para Celebração</span>
+          <span class="brand-subtitle">Terapia do Amor • 2027</span>
+        </div>
+      </a>
+
+      <div class="topbar-actions">
+        <span id="envBadge" class="env-badge">
+          <span class="env-dot"></span> Modo Offline (Preview Local)
+        </span>
+        <a href="painel.html" class="btn-header-access">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Painel da Equipe
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Oficial (Fundo Creme/Dourado + Círculos Concêntricos + Script MonteCarlo) -->
+  <section class="hero">
+    <svg class="hero-rings" viewBox="0 0 600 600" fill="none" aria-hidden="true">
+      <circle cx="300" cy="300" r="140" stroke="#B8860B" stroke-opacity="0.32" stroke-width="1.2" />
+      <circle cx="300" cy="300" r="205" stroke="#B8860B" stroke-opacity="0.25" stroke-width="1.2" />
+      <circle cx="300" cy="300" r="270" stroke="#B8860B" stroke-opacity="0.18" stroke-width="1.2" />
+    </svg>
+
+    <div class="container hero-inner">
+      <div>
+        <div class="hero-top-row">
+          <div class="date-badge" aria-label="27 de Maio de 2027">
+            <div class="date-badge-month">MAIO</div>
+            <div class="date-badge-day">27</div>
+            <div class="date-badge-year">2027</div>
+          </div>
+          <div class="hero-eyebrow">Celebração dos Casamentos • Terapia do Amor</div>
+        </div>
+
+        <h1>
+          Seu casamento começa diante do <span>Altar</span>
+        </h1>
+        <p class="hero-lead">
+          Portal de apoio para voluntários no levantamento de casais interessados em participar
+          da <strong>Celebração dos Casamentos 2027</strong>. Os dados cadastrados são enviados
+          instantaneamente para a equipe de acompanhamento.
+        </p>
+        <div class="hero-cta-group">
+          <a href="#levantamento" class="btn btn-primary btn-lg">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Registrar Novo Casal
+          </a>
+          <a
+            href="https://casamento.universal.org/"
+            target="_blank"
+            rel="noopener"
+            class="btn btn-outline-gold btn-lg"
+          >
+            Site Oficial
+          </a>
+        </div>
+      </div>
+
+      <aside class="hero-card" aria-label="Calendário Oficial 2027">
+        <div class="hero-card-header">
+          <h2 class="hero-card-title">Calendário Oficial 2027</h2>
+          <span style="font-size: 0.72rem; color: var(--azul-principal); font-weight: 700; letter-spacing: 0.6px;">PRAZOS</span>
+        </div>
+        <ul class="hero-date-list">
+          <li class="hero-date-item">
+            <span>Encerramento das inscrições</span>
+            <strong>12 Abr 2027</strong>
+          </li>
+          <li class="hero-date-item">
+            <span>Certificado Curso Casamento Blindado</span>
+            <strong>25 Abr 2027</strong>
+          </li>
+          <li class="hero-date-item">
+            <span>Envio da certidão de casamento civil</span>
+            <strong>17 Mai 2027</strong>
+          </li>
+          <li class="hero-date-item highlight">
+            <span>Grande Celebração dos Casamentos</span>
+            <strong>27 Mai 2027</strong>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Formulário de Levantamento -->
+  <main id="levantamento" class="main-section">
+    <div class="container-narrow">
+      <div class="section-intro">
+        <span class="section-tag">Formulário de Campo</span>
+        <h2>Levantamento de Casais</h2>
+        <div class="rings-divider" aria-hidden="true">
+          <svg width="24" height="18" viewBox="0 0 28 18" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="10.5" cy="9" r="6.5" />
+            <circle cx="17.5" cy="9" r="6.5" />
+          </svg>
+        </div>
+        <p>
+          Preencha durante ou logo após a conversa com o casal. As perguntas se adaptam
+          automaticamente conforme as respostas.
+        </p>
+      </div>
+
+      <div class="form-shell">
+        <!-- Barra persistente do voluntário -->
+        <div class="volunteer-bar">
+          <div class="volunteer-bar-info">
+            <div class="volunteer-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div class="volunteer-input-wrap">
+              <label for="voluntario">Voluntário responsável pela abordagem *</label>
+
+              <div id="volunteerEditWrap" class="volunteer-input-row">
+                <input
+                  id="voluntario"
+                  name="voluntario"
+                  type="text"
+                  class="input"
+                  placeholder="Digite seu nome (fica salvo para os próximos)"
+                  autocomplete="name"
+                />
+                <button type="button" id="btnSalvarVoluntario" class="btn btn-outline btn-sm">
+                  Salvar
+                </button>
+              </div>
+
+              <div id="volunteerSavedWrap" class="volunteer-input-row hidden">
+                <span class="volunteer-saved-pill">
+                  <span id="volunteerSavedName"></span>
+                </span>
+                <button type="button" id="btnTrocarVoluntario" class="btn btn-ghost btn-sm">
+                  Trocar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulário Principal -->
+        <form id="casalForm" class="form-body" novalidate>
+          <!-- ETAPA 1: Triagem do Casal -->
+          <div class="form-step">
+            <div class="step-header">
+              <div class="step-number">1</div>
+              <div>
+                <h3>Triagem do Casal</h3>
+                <p>Perguntas rápidas para identificar a situação e elegibilidade para a Celebração.</p>
+              </div>
+            </div>
+
+            <!-- 1. Situação atual -->
+            <div class="field-group">
+              <label class="field-label">1. Situação atual do casal <span class="req">*</span></label>
+              <div class="option-grid-3">
+                <label class="option-card">
+                  <input type="radio" name="situacaoCasal" value="Moram juntos (união estável)" />
+                  <span class="option-radio"></span>
+                  <span class="option-text">Moram juntos (união estável)</span>
+                </label>
+                <label class="option-card">
+                  <input type="radio" name="situacaoCasal" value="Casados" />
+                  <span class="option-radio"></span>
+                  <span class="option-text">Casados</span>
+                </label>
+                <label class="option-card">
+                  <input type="radio" name="situacaoCasal" value="Noivos / Namorando" />
+                  <span class="option-radio"></span>
+                  <span class="option-text">Noivos / Namorando</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 2. Casamento civil -->
+            <div class="field-group">
+              <label class="field-label">2. Já são casados no civil? <span class="req">*</span></label>
+              <div class="option-grid-3">
+                <label class="option-card">
+                  <input type="radio" name="casadoCivil" value="Sim" />
+                  <span class="option-radio"></span>
+                  <span class="option-text">Sim</span>
+                </label>
+                <label class="option-card">
+                  <input type="radio" name="casadoCivil" value="Não" />
+                  <span class="option-radio"></span>
+                  <span class="option-text">Não</span>
+                </label>
+                <label class="option-card">
+                  <input type="radio" name="casadoCivil" value="Em andamento" />
+                  <span class="option-radio"></span>
+                  <span class="option-text">Em andamento</span>
+                </label>
+              </div>
+
+              <!-- 2A: Condicional se NÃO é casado no civil -->
+              <div id="blocoCondicaoCivil" class="conditional-block hidden">
+                <label class="field-label">
+                  2A. Sobre o casamento civil: o casal tem condições de pagar as taxas do cartório?
+                  <span class="req">*</span>
+                </label>
+                <p class="field-hint">
+                  Aborde de forma acolhedora: casais com renda familiar menor que 2 salários mínimos
+                  podem ter direito à <strong>isenção gratuita das taxas no cartório</strong>.
+                </p>
+                <div class="option-grid">
+                  <label class="option-card">
+                    <input
+                      type="radio"
+                      name="condicaoCivil"
+                      value="Não — Renda menor que 2 salários (Gratuidade)"
+                    />
+                    <span class="option-radio"></span>
+                    <span class="option-text">Não — Renda menor que 2 salários (solicitar gratuidade)</span>
+                  </label>
+                  <label class="option-card">
+                    <input
+                      type="radio"
+                      name="condicaoCivil"
+                      value="Sim — Consegue custear o cartório"
+                    />
+                    <span class="option-radio"></span>
+                    <span class="option-text">Sim — Consegue custear o cartório</span>
+                  </label>
+                  <label class="option-card">
+                    <input
+                      type="radio"
+                      name="condicaoCivil"
+                      value="Prefere verificar com a equipe depois"
+                    />
+                    <span class="option-radio"></span>
+                    <span class="option-text">Prefere verificar depois com a equipe</span>
+                  </label>
+                </div>
+
+                <div id="civilReminder" class="civil-reminder" style="margin-top: 12px;">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                  </svg>
+                  <span id="civilReminderText">
+                    Lembrete: para participar da Celebração é necessário enviar a certidão civil até
+                    <strong>17/05/2027</strong>. A equipe pode orientar o casal!
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Casamento na igreja -->
+            <div class="field-group">
+              <div id="casadoIgrejaHeader">
+                <label class="field-label">
+                  3. Já são casados na igreja (cerimônia religiosa)? <span class="req">*</span>
+                </label>
+                <div class="option-grid-2">
+                  <label class="option-card">
+                    <input type="radio" name="casadoIgreja" value="Não" />
+                    <span class="option-radio"></span>
+                    <span class="option-text">Não</span>
+                  </label>
+                  <label class="option-card">
+                    <input type="radio" name="casadoIgreja" value="Sim" />
+                    <span class="option-radio"></span>
+                    <span class="option-text">Sim, já somos casados na igreja</span>
+                  </label>
+                </div>
+              </div>
+
+              <div id="casadoIgrejaAutoNote" class="civil-reminder hidden" style="margin-top: 0;">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+                <span>
+                  Como ainda <strong>não são casados no civil</strong>, marcado automaticamente como
+                  <strong>não casados na igreja</strong>.
+                </span>
+              </div>
+
+              <!-- 3A: Se NÃO casados na igreja -->
+              <div id="blocoNaoCasadoIgreja" class="conditional-block hidden">
+                <label class="field-label">
+                  3A. Tem o sonho / desejo de casar na igreja e receber a bênção do Altar?
+                  <span class="req">*</span>
+                </label>
+                <div class="option-grid-3">
+                  <label class="option-card">
+                    <input type="radio" name="sonhoAltar" value="Sim, tem interesse" />
+                    <span class="option-radio"></span>
+                    <span class="option-text">Sim, tem interesse</span>
+                  </label>
+                  <label class="option-card">
+                    <input type="radio" name="sonhoAltar" value="Tem dúvidas / quer entender melhor" />
+                    <span class="option-radio"></span>
+                    <span class="option-text">Tem dúvidas / quer entender</span>
+                  </label>
+                  <label class="option-card">
+                    <input type="radio" name="sonhoAltar" value="Não tem interesse no momento" />
+                    <span class="option-radio"></span>
+                    <span class="option-text">Não no momento</span>
+                  </label>
+                </div>
+
+                <!-- Dica de apoio ao voluntário -->
+                <details class="script-tip">
+                  <summary>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                      <path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z" />
+                    </svg>
+                    Dica para o voluntário: como explicar a importância do Altar?
+                  </summary>
+                  <div class="script-tip-body">
+                    <p>
+                      Muitos casais ainda não entendem a diferença de receber a bênção no Altar.
+                      Você pode explicar de forma simples e acolhedora:
+                    </p>
+                    <p>
+                      <em>
+                        "O casamento no civil formaliza a união diante das leis, mas receber a
+                        bênção no Altar é consagrar o relacionamento diante de Deus, trazendo
+                        proteção, direção e base espiritual para o casamento — independente de já
+                        morarem juntos há anos."
+                      </em>
+                    </p>
+                  </div>
+                </details>
+              </div>
+
+              <!-- 3B: Se SIM, já casados na igreja -->
+              <div id="blocoSimCasadoIgreja" class="conditional-block hidden">
+                <label class="field-label">
+                  3B. Como foi? Foi na Universal ou em outra denominação? <span class="req">*</span>
+                </label>
+                <div class="option-grid-2">
+                  <label class="option-card">
+                    <input type="radio" name="igrejaCasamento" value="Outra denominação" />
+                    <span class="option-radio"></span>
+                    <span class="option-text">Em outra denominação</span>
+                  </label>
+                  <label class="option-card">
+                    <input type="radio" name="igrejaCasamento" value="Na Universal" />
+                    <span class="option-radio"></span>
+                    <span class="option-text">Na Universal</span>
+                  </label>
+                </div>
+
+                <!-- 3B.1 e 3B.2: Se foi na Universal -->
+                <div id="blocoDetalhesUniversal" class="conditional-subblock hidden">
+                  <div class="field-group">
+                    <label class="field-label">
+                      3B.1. Fizeram o curso preparatório (Casamento Blindado)?
+                      <span class="req">*</span>
+                    </label>
+                    <div class="option-grid-3">
+                      <label class="option-card">
+                        <input type="radio" name="fezCurso" value="Sim" />
+                        <span class="option-radio"></span>
+                        <span class="option-text">Sim</span>
+                      </label>
+                      <label class="option-card">
+                        <input type="radio" name="fezCurso" value="Não" />
+                        <span class="option-radio"></span>
+                        <span class="option-text">Não</span>
+                      </label>
+                      <label class="option-card">
+                        <input type="radio" name="fezCurso" value="Não lembra" />
+                        <span class="option-radio"></span>
+                        <span class="option-text">Não lembra</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label class="field-label">
+                      3B.2. Teve ata oficial para assinar na cerimônia?
+                      <span class="req">*</span>
+                    </label>
+                    <p class="field-hint">
+                      Algumas cerimônias antigas eram apenas apresentações no altar, sem curso e sem
+                      assinatura de ata — nesses casos, o casal pode se casar oficialmente na Celebração.
+                    </p>
+                    <div class="option-grid-3">
+                      <label class="option-card">
+                        <input type="radio" name="assinouAta" value="Sim" />
+                        <span class="option-radio"></span>
+                        <span class="option-text">Sim</span>
+                      </label>
+                      <label class="option-card">
+                        <input type="radio" name="assinouAta" value="Não" />
+                        <span class="option-radio"></span>
+                        <span class="option-text">Não</span>
+                      </label>
+                      <label class="option-card">
+                        <input type="radio" name="assinouAta" value="Não lembra" />
+                        <span class="option-radio"></span>
+                        <span class="option-text">Não lembra</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Banner dinâmico de elegibilidade -->
+              <div id="eligibilityBanner" class="eligibility-banner hidden" role="status"></div>
+            </div>
+          </div>
+
+          <!-- ETAPA 2: Dados de Contato e Acompanhamento -->
+          <div class="form-step">
+            <div class="step-header">
+              <div class="step-number">2</div>
+              <div>
+                <h3>Dados de Contato e Acompanhamento</h3>
+                <p>Informações para a equipe entrar em contato e apoiar o casal na inscrição.</p>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field-group">
+                <label class="field-label" for="nomePessoa">
+                  4. Nome da pessoa abordada <span class="req">*</span>
+                </label>
+                <input
+                  id="nomePessoa"
+                  name="nomePessoa"
+                  type="text"
+                  class="input"
+                  placeholder="Ex.: Maria Aparecida"
+                  required
+                />
+              </div>
+
+              <div class="field-group">
+                <label class="field-label" for="nomeConjuge">
+                  5. Nome do(a) cônjuge / parceiro(a)
+                </label>
+                <input
+                  id="nomeConjuge"
+                  name="nomeConjuge"
+                  type="text"
+                  class="input"
+                  placeholder="Opcional na abordagem rápida"
+                />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field-group">
+                <label class="field-label" for="whatsapp">
+                  6. WhatsApp / Telefone <span class="req">*</span>
+                </label>
+                <input
+                  id="whatsapp"
+                  name="whatsapp"
+                  type="tel"
+                  inputmode="numeric"
+                  class="input"
+                  placeholder="(11) 99999-9999"
+                  required
+                />
+              </div>
+
+              <div class="field-group">
+                <label class="field-label" for="bairroIgreja">
+                  7. Bairro / Cidade ou Igreja mais próxima
+                </label>
+                <input
+                  id="bairroIgreja"
+                  name="bairroIgreja"
+                  type="text"
+                  class="input"
+                  placeholder="Ex.: Centro / Catedral"
+                />
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">
+                8. Nível de interesse / Próximo passo <span class="req">*</span>
+              </label>
+              <div class="option-grid-2">
+                <label class="option-card">
+                  <input type="radio" name="proximoPasso" value="Quer se inscrever na Celebração" />
+                  <span class="option-radio"></span>
+                  <span class="option-text">Quer se inscrever na Celebração</span>
+                </label>
+                <label class="option-card">
+                  <input
+                    type="radio"
+                    name="proximoPasso"
+                    value="Quer receber mais informações pelo WhatsApp"
+                  />
+                  <span class="option-radio"></span>
+                  <span class="option-text">Quer mais informações no WhatsApp</span>
+                </label>
+                <label class="option-card">
+                  <input
+                    type="radio"
+                    name="proximoPasso"
+                    value="Precisa de orientação sobre o casamento civil"
+                  />
+                  <span class="option-radio"></span>
+                  <span class="option-text">Precisa de orientação sobre o civil</span>
+                </label>
+                <label class="option-card">
+                  <input type="radio" name="proximoPasso" value="Sem interesse no momento" />
+                  <span class="option-radio"></span>
+                  <span class="option-text">Sem interesse no momento</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="observacoes">
+                9. Observações do voluntário
+              </label>
+              <textarea
+                id="observacoes"
+                name="observacoes"
+                class="textarea"
+                placeholder="Ex.: Melhor horário para ligar, dúvidas específicas que o casal teve..."
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Rodapé do Formulário -->
+          <div class="form-footer">
+            <div class="sync-note">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10" />
+                <polyline points="1 20 1 14 7 14" />
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+              </svg>
+              <span id="syncNoteText">Modo local ativo.</span>
+            </div>
+
+            <button type="submit" id="btnSubmit" class="btn btn-gold btn-lg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+              Enviar Levantamento
+            </button>
+          </div>
+        </form>
+
+        <!-- Painel de Confirmação -->
+        <div id="successPanel" class="success-panel hidden">
+          <div class="success-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <h3>Levantamento registrado!</h3>
+          <p id="successSyncText"></p>
+          <div id="successSummary" class="success-summary"></div>
+          <div class="success-actions">
+            <button type="button" id="btnNovoCadastro" class="btn btn-primary btn-lg">
+              Cadastrar Próximo Casal
+            </button>
+            <a href="painel.html" target="_blank" class="btn btn-outline btn-lg">
+              Ver no Painel da Equipe
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Seção Informativa (resumo oficial para mostrar ao casal na abordagem) -->
+  <section class="info-section">
+    <div class="container">
+      <div class="section-intro">
+        <span class="section-tag">Resumo para Orientar o Casal</span>
+        <h2>Como funciona a Inscrição Oficial</h2>
+        <p>
+          A Celebração dos Casamentos é aberta a noivos, casais em união estável e casados no civil,
+          mesmo que não sejam membros da igreja.
+        </p>
+      </div>
+
+      <div class="steps-cards">
+        <article class="info-card">
+          <div class="info-card-num">01</div>
+          <h4>Pré-cadastro</h4>
+          <p>Cadastro inicial no site oficial com dados básicos dos noivos (até 12/04/2027).</p>
+        </article>
+        <article class="info-card">
+          <div class="info-card-num">02</div>
+          <h4>Escolha do Local</h4>
+          <p>Definição da igreja/localidade onde o casal deseja receber a bênção no Altar.</p>
+        </article>
+        <article class="info-card">
+          <div class="info-card-num">03</div>
+          <h4>Curso Casamento Blindado</h4>
+          <p>Conclusão do curso preparatório com envio do certificado até 25/04/2027.</p>
+        </article>
+        <article class="info-card">
+          <div class="info-card-num">04</div>
+          <h4>Documentos e Civil</h4>
+          <p>Envio dos documentos e certidão de casamento civil até 17/05/2027. Cerimônia: 27/05/2027.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rodapé -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>Levantamento de Casais • Celebração dos Casamentos 2027</span>
+      <div class="footer-links">
+        <a href="https://casamento.universal.org/" target="_blank" rel="noopener">
+          casamento.universal.org
+        </a>
+        <a href="painel.html">Painel da Equipe</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/service.js"></script>
+  <script src="js/form.js"></script>
+</body>
+</html>

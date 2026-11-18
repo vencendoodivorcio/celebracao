@@ -1,0 +1,9 @@
+# Áudios privados de referência (não subir para o repositório público)
+*.ogg
+*.mp3
+*.wav
+
+# Arquivos temporários do sistema
+.DS_Store
+Thumbs.db
+desktop.ini
