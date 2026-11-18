@@ -23,19 +23,27 @@ Quando estiver tudo aprovado para subir ao ar, siga os 3 passos abaixo.
    - Cole suas credenciais em `firebase.config`.
    - Troque `panelAccessCode` para a senha que sua equipe vai usar.
 
-### Regras recomendadas no Firestore (aba *Regras* do Firestore)
-Para iniciar o levantamento com segurança básica (permite envio do formulário e leitura/atualização do painel):
+### Regras de segurança recomendadas no Firestore (aba *Regras* do Firestore)
+Voluntários enviam novos cadastros sem precisar de login (`create`), mas apenas a equipe logada via **Firebase Authentication (E-mail/Senha)** consegue ler, editar ou excluir os dados dos casais:
 ```js
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /levantamento_casais_2027/{docId} {
-      allow read, create, update, delete: if true;
+      allow create: if request.resource.data.keys().hasAll(['voluntario', 'nomePessoa', 'whatsapp', 'createdAt'])
+                    && request.resource.data.voluntario is string
+                    && request.resource.data.nomePessoa is string
+                    && request.resource.data.whatsapp is string;
+      allow read, update, delete: if request.auth != null;
     }
   }
 }
 ```
-> *Dica:* Se quiser restringir a leitura apenas a usuários autenticados, podemos ativar **Firebase Authentication (E-mail/Senha)** na etapa de publicação.
+
+### Ativar o Login da Equipe (Firebase Authentication)
+1. No Console do Firebase, clique em **Criação (Build) → Authentication → Vamos começar**.
+2. Na aba **Sign-in method**, clique em **E-mail/senha**, ative **E-mail/senha** e clique em **Salvar**.
+3. Na aba **Users**, clique em **Adicionar usuário** e cadastre o e-mail e a senha que a equipe de acompanhamento vai usar para entrar no `painel.html`.
 
 ---
 

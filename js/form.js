@@ -385,7 +385,11 @@
       successPanel.scrollIntoView({ behavior: "smooth", block: "center" });
     } catch (err) {
       console.error(err);
-      showToast("Erro ao salvar registro. Verifique as configurações de conexão.");
+      if (err && err.code === "permission-denied") {
+        showToast("Permissão negada no Firestore. Verifique se publicou as Regras de segurança.");
+      } else {
+        showToast("Erro ao salvar registro. Verifique a conexão com a internet.");
+      }
     } finally {
       btnSubmit.disabled = false;
       btnSubmit.innerHTML =

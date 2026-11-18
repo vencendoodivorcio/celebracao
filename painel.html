@@ -37,6 +37,9 @@
         <a href="index.html" class="btn-header-access">
           + Novo Levantamento
         </a>
+        <button type="button" id="btnLogout" class="btn-header-access hidden" title="Sair da conta da equipe">
+          Sair
+        </button>
       </div>
     </div>
   </header>
@@ -57,23 +60,36 @@
           <circle cx="17.5" cy="9" r="6.5" />
         </svg>
       </div>
-      <p>Informe o código da equipe para visualizar os contatos dos casais em tempo real.</p>
+      <p id="authSubtitle">Entre com o e-mail e senha da equipe para acompanhar os casais em tempo real.</p>
 
       <form id="authForm">
-        <div class="field-group" style="text-align: left;">
-          <label class="field-label" for="accessCodeInput">Código da equipe</label>
+        <div id="emailFieldGroup" class="field-group" style="text-align: left;">
+          <label class="field-label" for="authEmailInput">E-mail da equipe</label>
           <input
-            id="accessCodeInput"
+            id="authEmailInput"
+            type="email"
+            class="input"
+            placeholder="equipe@exemplo.com"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="field-group" style="text-align: left;">
+          <label id="passwordFieldLabel" class="field-label" for="authPasswordInput">Senha</label>
+          <input
+            id="authPasswordInput"
             type="password"
             class="input"
-            placeholder="Digite o código da equipe"
+            placeholder="Digite a senha"
+            autocomplete="current-password"
             required
           />
         </div>
-        <button type="submit" class="btn btn-gold btn-lg" style="width: 100%;">
+
+        <button type="submit" id="btnAuthSubmit" class="btn btn-gold btn-lg" style="width: 100%;">
           Entrar no Painel
         </button>
-        <div id="authError" class="auth-error hidden">Código incorreto. Tente novamente.</div>
+        <div id="authError" class="auth-error hidden"></div>
         <div id="authOfflineHint" class="auth-hint hidden"></div>
       </form>
     </div>

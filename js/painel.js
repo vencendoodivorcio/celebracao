@@ -7,9 +7,15 @@
 
   const authSection = document.getElementById("authSection");
   const authForm = document.getElementById("authForm");
-  const accessCodeInput = document.getElementById("accessCodeInput");
+  const authSubtitle = document.getElementById("authSubtitle");
+  const emailFieldGroup = document.getElementById("emailFieldGroup");
+  const authEmailInput = document.getElementById("authEmailInput");
+  const passwordFieldLabel = document.getElementById("passwordFieldLabel");
+  const authPasswordInput = document.getElementById("authPasswordInput");
+  const btnAuthSubmit = document.getElementById("btnAuthSubmit");
   const authError = document.getElementById("authError");
   const authOfflineHint = document.getElementById("authOfflineHint");
+  const btnLogout = document.getElementById("btnLogout");
 
   const dashboardSection = document.getElementById("dashboardSection");
   const envBadge = document.getElementById("envBadge");
@@ -65,10 +71,22 @@
       envBadge.innerHTML = '<span class="env-dot"></span> Online • Firebase Ao Vivo';
       offlineTools.classList.add("hidden");
       if (btnEmptySeed) btnEmptySeed.classList.add("hidden");
+      emailFieldGroup.classList.remove("hidden");
+      authEmailInput.required = true;
+      passwordFieldLabel.textContent = "Senha";
+      authPasswordInput.placeholder = "Digite a senha da conta";
+      authSubtitle.textContent =
+        "Entre com o e-mail e senha da equipe cadastrados no Firebase para acompanhar os casais em tempo real.";
     } else {
       envBadge.classList.remove("online");
       envBadge.innerHTML = '<span class="env-dot"></span> Modo Offline (Preview Local)';
       offlineTools.classList.remove("hidden");
+      emailFieldGroup.classList.add("hidden");
+      authEmailInput.required = false;
+      passwordFieldLabel.textContent = "Código de acesso (modo local)";
+      authPasswordInput.placeholder = "Digite o código de teste";
+      authSubtitle.textContent =
+        "Informe o código de teste para visualizar o painel em modo offline.";
       if (authOfflineHint && window.APP_CONFIG.panelAccessCode) {
         authOfflineHint.classList.remove("hidden");
         authOfflineHint.innerHTML =
@@ -79,29 +97,126 @@
     }
   }
 
-  function checkAuth() {
+  async function checkAuth() {
+    if (window.CasamentoService.isOnlineMode()) {
+      try {
+        await window.CasamentoService.onAuthStateChanged(function (user) {
+          if (user) {
+            btnLogout.classList.remove("hidden");
+            btnLogout.title = "Sair (" + (user.email || "equipe") + ")";
+            unlockDashboard();
+          } else {
+            lockDashboard();
+          }
+        });
+      } catch (err) {
+        console.error(err);
+        lockDashboard();
+        showAuthError("Erro ao conectar ao Firebase Authentication. Verifique a conexão.");
+      }
+      return;
+    }
+
     const requiredCode = (window.APP_CONFIG && window.APP_CONFIG.panelAccessCode) || "";
     if (!requiredCode || sessionStorage.getItem(AUTH_SESSION_KEY) === "1") {
       unlockDashboard();
     } else {
-      authSection.classList.remove("hidden");
-      dashboardSection.classList.add("hidden");
+      lockDashboard();
     }
   }
 
-  authForm.addEventListener("submit", function (e) {
+  function showAuthError(msg) {
+    authError.textContent = msg;
+    authError.classList.remove("hidden");
+  }
+
+  function mapFirebaseAuthError(err) {
+    const code = (err && err.code) || "";
+    if (
+      code === "auth/invalid-credential" ||
+      code === "auth/wrong-password" ||
+      code === "auth/user-not-found" ||
+      code === "auth/invalid-login-credentials"
+    ) {
+      return "E-mail ou senha incorretos. Confira os dados e tente novamente.";
+    }
+    if (code === "auth/invalid-email") {
+      return "Formato de e-mail inválido.";
+    }
+    if (code === "auth/too-many-requests") {
+      return "Muitas tentativas seguidas. Aguarde alguns instantes e tente novamente.";
+    }
+    if (code === "auth/operation-not-allowed") {
+      return "Ative o método 'E-mail/senha' em Firebase Console → Authentication → Sign-in method.";
+    }
+    return "Não foi possível entrar agora. Tente novamente.";
+  }
+
+  authForm.addEventListener("submit", async function (e) {
     e.preventDefault();
+    authError.classList.add("hidden");
+
+    if (window.CasamentoService.isOnlineMode()) {
+      const email = authEmailInput.value.trim();
+      const password = authPasswordInput.value;
+      if (!email || !password) {
+        showAuthError("Informe e-mail e senha.");
+        return;
+      }
+
+      btnAuthSubmit.disabled = true;
+      btnAuthSubmit.textContent = "Entrando...";
+      try {
+        await window.CasamentoService.signIn(email, password);
+        authPasswordInput.value = "";
+      } catch (err) {
+        console.error(err);
+        showAuthError(mapFirebaseAuthError(err));
+        authPasswordInput.focus();
+        authPasswordInput.select();
+      } finally {
+        btnAuthSubmit.disabled = false;
+        btnAuthSubmit.textContent = "Entrar no Painel";
+      }
+      return;
+    }
+
+    // Modo offline
     const expected = (window.APP_CONFIG && window.APP_CONFIG.panelAccessCode) || "";
-    if (accessCodeInput.value.trim() === expected) {
+    if (authPasswordInput.value.trim() === expected) {
       sessionStorage.setItem(AUTH_SESSION_KEY, "1");
       authError.classList.add("hidden");
       unlockDashboard();
     } else {
-      authError.classList.remove("hidden");
-      accessCodeInput.focus();
-      accessCodeInput.select();
+      showAuthError("Código incorreto. Tente novamente.");
+      authPasswordInput.focus();
+      authPasswordInput.select();
     }
   });
+
+  if (btnLogout) {
+    btnLogout.addEventListener("click", async function () {
+      try {
+        await window.CasamentoService.signOut();
+        sessionStorage.removeItem(AUTH_SESSION_KEY);
+        showToast("Você saiu do painel.");
+      } catch (err) {
+        console.error(err);
+        showToast("Erro ao sair da conta.");
+      }
+    });
+  }
+
+  function lockDashboard() {
+    if (unsubscribeFn) {
+      unsubscribeFn();
+      unsubscribeFn = null;
+    }
+    allRecords = [];
+    btnLogout.classList.add("hidden");
+    dashboardSection.classList.add("hidden");
+    authSection.classList.remove("hidden");
+  }
 
   async function unlockDashboard() {
     authSection.classList.add("hidden");
@@ -114,7 +229,11 @@
         },
         function (err) {
           console.error(err);
-          showToast("Erro ao conectar ao banco de dados.");
+          if (err && err.code === "permission-denied") {
+            showToast("Sem permissão no Firestore. Verifique se publicou as Regras de segurança.");
+          } else {
+            showToast("Erro ao conectar ao banco de dados.");
+          }
         }
       );
     }

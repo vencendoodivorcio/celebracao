@@ -16,6 +16,7 @@
   }
 
   let firestoreDb = null;
+  let firebaseAuth = null;
   let firebaseLoadPromise = null;
 
   /**
@@ -179,14 +180,42 @@
       firebaseLoadPromise = (async function () {
         await loadScript("https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js");
         await loadScript("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js");
+        await loadScript("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js");
         if (!window.firebase.apps.length) {
           window.firebase.initializeApp(window.APP_CONFIG.firebase.config);
         }
         firestoreDb = window.firebase.firestore();
+        firebaseAuth = window.firebase.auth();
         return firestoreDb;
       })();
     }
     return firebaseLoadPromise;
+  }
+
+  async function ensureAuth() {
+    await ensureFirebase();
+    return firebaseAuth;
+  }
+
+  async function signIn(email, password) {
+    const auth = await ensureAuth();
+    const cred = await auth.signInWithEmailAndPassword(email, password);
+    return cred.user;
+  }
+
+  async function signOut() {
+    if (!isOnlineMode()) return;
+    const auth = await ensureAuth();
+    await auth.signOut();
+  }
+
+  async function onAuthStateChanged(callback) {
+    if (!isOnlineMode()) {
+      callback(null);
+      return function () {};
+    }
+    const auth = await ensureAuth();
+    return auth.onAuthStateChanged(callback);
   }
 
   /* ========================================================================
@@ -473,6 +502,9 @@
   window.CasamentoService = {
     isOnlineMode: isOnlineMode,
     calcularElegibilidade: calcularElegibilidade,
+    signIn: signIn,
+    signOut: signOut,
+    onAuthStateChanged: onAuthStateChanged,
     createRecord: createRecord,
     updateRecord: updateRecord,
     deleteRecord: deleteRecord,
