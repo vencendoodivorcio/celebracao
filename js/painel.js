@@ -764,8 +764,7 @@
     const saudacao =
       "Olá, " +
       (rec.nomePessoa || "tudo bem") +
-      "! Tudo bem? Somos da equipe da Celebração dos Casamentos 2027 (Terapia do Amor). " +
-      "Recebemos seu contato pelo nosso levantamento e gostaríamos de passar as orientações para a sua participação!";
+      "! Tudo bem? Sou voluntário(a) auxiliar da Terapia do Amor e gostaríamos de passar algumas orientações a respeito da Celebração dos Casamentos. Podemos conversar por aqui?";
     return "https://wa.me/" + digits + "?text=" + encodeURIComponent(saudacao);
   }
 
